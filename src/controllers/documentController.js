@@ -30,11 +30,15 @@ const getDocumentById = async (req, res) => {
 };
 
 const updateDocument = async (req, res) => {
-  const { content } = req.body;
+  const { content, title } = req.body;
+  const updates = { lastEditedBy: req.user._id };
+  if (content !== undefined) updates.content = content;
+  if (title !== undefined) updates.title = title;
+
   try {
     const document = await Document.findByIdAndUpdate(
       req.params.id, 
-      { content, lastEditedBy: req.user._id },
+      updates,
       { new: true }
     );
     res.json(document);
@@ -43,4 +47,13 @@ const updateDocument = async (req, res) => {
   }
 };
 
-module.exports = { createDocument, getDocuments, getDocumentById, updateDocument };
+const deleteDocument = async (req, res) => {
+  try {
+    await Document.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Document deleted successfully' });
+  } catch (error) {
+    res.status(400).json({ message: 'Error deleting document' });
+  }
+};
+
+module.exports = { createDocument, getDocuments, getDocumentById, updateDocument, deleteDocument };

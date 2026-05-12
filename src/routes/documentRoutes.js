@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { createDocument, getDocuments, getDocumentById, updateDocument } = require('../controllers/documentController');
+const { createDocument, getDocuments, getDocumentById, updateDocument, deleteDocument } = require('../controllers/documentController');
 const { protect } = require('../middlewares/authMiddleware');
 
 router.route('/')
@@ -11,6 +11,7 @@ router.route('/workspace/:workspaceId')
 
 router.route('/:id')
   .get(protect, getDocumentById)
-  .put(protect, updateDocument);
+  .put(protect, updateDocument)
+  .delete(protect, deleteDocument);
 
 module.exports = router;
