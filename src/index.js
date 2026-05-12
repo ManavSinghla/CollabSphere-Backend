@@ -27,11 +27,13 @@ const workspaceRoutes = require('./routes/workspaceRoutes');
 const channelRoutes = require('./routes/channelRoutes');
 const messageRoutes = require('./routes/messageRoutes');
 const documentRoutes = require('./routes/documentRoutes');
+const uploadRoutes = require('./routes/uploadRoutes');
 
 app.use('/api/workspaces', workspaceRoutes);
 app.use('/api/channels', channelRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/api/upload', uploadRoutes);
 
 const Message = require('./models/Message');
 
@@ -49,7 +51,8 @@ io.on('connection', (socket) => {
       const newMessage = await Message.create({
         channelId: data.channelId,
         senderId: data.senderId,
-        text: data.text
+        text: data.text || '',
+        attachments: data.attachments || []
       });
       const populatedMessage = await newMessage.populate('senderId', 'name avatar');
       io.to(data.channelId).emit('receive_message', populatedMessage);

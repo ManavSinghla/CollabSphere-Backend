@@ -13,7 +13,7 @@ const messageSchema = new mongoose.Schema({
   },
   text: {
     type: String,
-    required: true
+    default: ''
   },
   attachments: [{
     type: String // URL to Cloudinary / Firebase
